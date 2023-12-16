@@ -1,0 +1,30 @@
+/**
+ * Document: MaxCompiler Training (maxcompiler-training.pdf)
+ * Chapter: 1
+ * Exercise Solution: 2
+ * Summary:
+ *     Kernel that applies gamma correction to an image by using the
+ *   input pixel as the index into a lookup table calculated on
+ *   CPU and written into mapped ROM.
+ */
+package gamma;
+
+import com.maxeler.maxcompiler.v2.kernelcompiler.Kernel;
+import com.maxeler.maxcompiler.v2.kernelcompiler.KernelParameters;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.base.DFEVar;
+
+class GammaSolutionKernel extends Kernel {
+	GammaSolutionKernel(KernelParameters parameters) {
+		super(parameters);
+
+		DFEVar inImage = io.input("inImage", dfeInt(32));
+
+		DFEVar result = mem.romMapped(
+			"GammaSolutionLUT",
+			inImage.cast(dfeUInt(8)),
+			dfeInt(32),
+			256);
+
+		io.output("outImage", result, result.getType());
+	}
+}
